@@ -15,9 +15,12 @@ public static void main(String[] args){
      Deck playerDeck = new Deck();
      Deck playerSideDeck1 = new Deck();
      Deck playerSideDeck2 = new Deck();
+     Deck playerSideDecks1Side1 = new Deck();
+     Deck playerSideDecks1Side2= new Deck();
      Deck playerTempDeck= new Deck();
      Deck dealerDeck = new Deck();
-
+     Deck playerSideDecks2Side1 = new Deck();
+     Deck playerSideDecks2Side2 = new Deck();
      double playerMoney = 100.00;
     
      System.out.println("Betinizi girin");
@@ -35,9 +38,9 @@ public static void main(String[] args){
         }
 
         boolean endRound = false;
-        
-        
-
+        boolean splitMax= false;
+        boolean birinciSplit=false;
+        boolean ikinciSplit=false;
 
         playerDeck.draw(playingDeck);
         dealerDeck.draw(playingDeck);
@@ -90,7 +93,7 @@ public static void main(String[] args){
            // }
             if((response==3)&&playerDeck.getCard(0).getValue()==playerDeck.getCard(1).getValue()){
                 
-                playerBet = 2*playerBet; //iki deste içinde aynı miktar para 5 girildiyse ayrılan deste için de 5
+                playerBet = playerBet+playerBet; //iki deste içinde aynı miktar para 5 girildiyse ayrılan deste için de 5
                 split=true;
                 // deste sol ve sag olarak ikiye ayrılıp direkt kart çekiliyor.
                 playerDeck.moveAllToDeck(playerTempDeck); //gecici desteye
@@ -98,13 +101,13 @@ public static void main(String[] args){
                 playerSideDeck1.draw(playingDeck); //1. ele kart çek
                 playerSideDeck2.addCard(playerTempDeck.getCard(1));//gecici destenin 2. elemanı 2. elin 1. elemanı
                 playerSideDeck2.draw(playingDeck); //2. ele kart cek
-                
+                playerTempDeck.moveAllToDeck(playingDeck);
 
                 // sol desteye direkt sorulur kart çekecek misiniz
                 while(true){ //split loopu 2. elin busted veya stay olmasıyla bitecektir
                     System.out.println("1. eliniz: "+playerSideDeck1.toString()+"\n");
                     System.out.println("Toplamı: "+playerSideDeck1.cardsValue());
-                    System.out.println("Hit: 1 or Stay: 2");
+                    System.out.println("Hit: 1 or Stay: 2 or Split:3");
                     int cevab= userIn.nextInt(); //cevap alınır
                     if(cevab==1){
                         playerSideDeck1.draw(playingDeck);
@@ -119,30 +122,189 @@ public static void main(String[] args){
                     if(cevab==2){
                         break;
                     }
-                }
-                while(true){
-                    System.out.println("2. eliniz: "+playerSideDeck2.toString()+"\n");
-                    System.out.println("Toplamı: "+playerSideDeck2.cardsValue());
-                    System.out.println("Hit: 1 or Stay: 2");
-                    int cevap= userIn.nextInt();
-                    if(cevap==1){
-                        playerSideDeck2.draw(playingDeck);
-                        if(playerSideDeck2.cardsValue()>21){
-                            System.out.println("Busted, 2. elin kaybetti");
-                            playerMoney -= playerBet/2;
+                    if((cevab==3)&&playerSideDeck1.getCard(0).getValue()==playerSideDeck1.getCard(1).getValue()){
+                        splitMax=true;
+                        birinciSplit=true;
+                        playerBet += playerBet/2;
+                        playerSideDeck1.moveAllToDeck(playerTempDeck);
+                        playerSideDecks1Side1.addCard(playerTempDeck.getCard(0));
+                        playerSideDecks1Side1.draw(playingDeck);
+                        playerSideDecks1Side2.addCard(playerTempDeck.getCard(1));
+                        playerSideDecks1Side2.draw(playingDeck);
+                       
+                        while(true){
+                            System.out.println("1. eliniz: "+playerSideDecks1Side1.toString()+"\n");
+                            System.out.println("Toplamı: "+playerSideDecks1Side1.cardsValue());
+                            System.out.println("Hit: 1 or Stay: 2 ");
+                            int cevaps= userIn.nextInt();
+                            if(cevaps==1){
+                                playerSideDecks1Side1.draw(playingDeck);
+                                if(playerSideDecks1Side1.cardsValue()>21){
+                                    System.out.println("Busted, 1. elin kaybetti");
+                                    
+                                    break;
+                            }
+                                System.out.println("Sunu cektiniz: "+ playerSideDecks1Side1.getCard(playerSideDecks1Side1.deckSize()-1).toString()+"\n");
+                                System.out.println("Toplamı: "+ playerSideDecks1Side1.cardsValue());
+                            }
+                            if(cevaps==2){
+                                break;
+                            }
+                            
+                        }
+                        while(true){
+                            System.out.println("2. eliniz: "+playerSideDecks1Side2.toString()+"\n");
+                            System.out.println("Toplamı: "+playerSideDecks1Side2.cardsValue());
+                            System.out.println("Hit: 1 or Stay: 2 ");
+                            int cevapsu= userIn.nextInt();
+                            if(cevapsu==1){
+                                playerSideDecks1Side2.draw(playingDeck);
+                                if(playerSideDecks1Side2.cardsValue()>21){
+                                    System.out.println("Busted, 2. elin kaybetti");
+                                    
+                                    break;
+                            }
+                                System.out.println("Sunu cektiniz: "+ playerSideDecks1Side2.getCard(playerSideDecks1Side2.deckSize()-1).toString()+"\n");
+                                System.out.println("Toplamı: "+ playerSideDecks1Side2.cardsValue());
+                            }
+                            if(cevapsu==2){
+                                break;
+                            }
+                        }
+                        while(true){
+                            if(splitMax==false){
+                                System.out.println("2. eliniz: "+playerSideDeck2.toString()+"\n");
+                            }else {
+                            System.out.println("3. eliniz: "+playerSideDeck2.toString()+"\n");
+                            }
+                            System.out.println("Toplamı: "+playerSideDeck2.cardsValue());
+                            System.out.println("Hit: 1 or Stay: 2");
+                        int cevap= userIn.nextInt();
+                        if(cevap==1){
+                            playerSideDeck2.draw(playingDeck);
+                            if(playerSideDeck2.cardsValue()>21){
+                                if(splitMax==false){
+                                System.out.println("Busted, 2. elin kaybetti");
+                                }
+                                else{
+                                    System.out.println("Busted 3. elin kaybetti");
+                                }
+                                playerMoney -= playerBet/2;
+                                
+                                break;
+                            }
+                            System.out.println("Sunu cektiniz: "+ playerSideDeck2.getCard(playerSideDeck2.deckSize()-1).toString()+"\n");
+                            System.out.println("Toplamı: "+ playerSideDeck2.cardsValue());
+                        }
+                        if(cevap==2){
                             
                             break;
                         }
-                        System.out.println("Sunu cektiniz: "+ playerSideDeck2.getCard(playerSideDeck2.deckSize()-1).toString()+"\n");
-                        System.out.println("Toplamı: "+ playerSideDeck2.cardsValue());
+                        
                     }
-                    if(cevap==2){
+                    }
+                }
+                
+               //2. deste kısmı 
+                while(true){
+                    if(splitMax==false){
+                        System.out.println("2. eliniz: "+playerSideDeck2.toString()+"\n");
+                        System.out.println("Toplamı: "+playerSideDeck2.cardsValue());
+                        System.out.println("Hit: 1 or Stay: 2 or Split:3");
+                        int cev= userIn.nextInt(); //cevap alınır
+                        if(cev==1){
+                            playerSideDeck2.draw(playingDeck);
+                            if(playerSideDeck2.cardsValue()>21){
+                                System.out.println("Busted, 2. elin kaybetti");
+                                
+                                break;
+                            }
+                            System.out.println("Sunu cektiniz: "+ playerSideDeck2.getCard(playerSideDeck2.deckSize()-1).toString()+"\n");
+                            System.out.println("Toplamı: "+ playerSideDeck2.cardsValue());
+                        }
+                        if(cev==2){
+                            break;
+                        }
+                        if((cev==3)&&(playerSideDeck2.getCard(0).getValue()==playerSideDeck2.getCard(1).getValue())){
+                            splitMax=true;
+                            ikinciSplit=true;
+                            playerBet += playerBet/2;
+                            playerSideDeck2.moveAllToDeck(playerTempDeck);
+                            playerSideDecks2Side1.addCard(playerTempDeck.getCard(0));
+                            playerSideDecks2Side1.draw(playingDeck);
+                            playerSideDecks2Side2.addCard(playerTempDeck.getCard(1));
+                            playerSideDecks2Side2.draw(playingDeck);
+                           
+                            while(true){
+                                System.out.println("2. eliniz: "+playerSideDecks2Side1.toString()+"\n");
+                                System.out.println("Toplamı: "+playerSideDecks2Side1.cardsValue());
+                                System.out.println("Hit: 1 or Stay: 2 ");
+                                int cevaps= userIn.nextInt();
+                                if(cevaps==1){
+                                    playerSideDecks2Side1.draw(playingDeck);
+                                    if(playerSideDecks2Side1.cardsValue()>21){
+                                        System.out.println("Busted, 2. elin kaybetti");
+                                        break;
+                                }
+                                    System.out.println("Sunu cektiniz: "+ playerSideDecks2Side1.getCard(playerSideDecks2Side1.deckSize()-1).toString()+"\n");
+                                    System.out.println("Toplamı: "+ playerSideDecks2Side1.cardsValue());
+                                }
+                                if(cevaps==2){
+                                    break;
+                                }
+                                
+                            }
+                            while(true){
+                                System.out.println("3. eliniz: "+playerSideDecks2Side2.toString()+"\n");
+                                System.out.println("Toplamı: "+playerSideDecks2Side2.cardsValue());
+                                System.out.println("Hit: 1 or Stay: 2 ");
+                                int cevapsu= userIn.nextInt();
+                                if(cevapsu==1){
+                                    playerSideDecks2Side2.draw(playingDeck);
+                                    if(playerSideDecks2Side2.cardsValue()>21){
+                                        System.out.println("Busted, 3. elin kaybetti");
+                                        
+                                        break;
+                                }
+                                    System.out.println("Sunu cektiniz: "+ playerSideDecks2Side2.getCard(playerSideDecks2Side2.deckSize()-1).toString()+"\n");
+                                    System.out.println("Toplamı: "+ playerSideDecks2Side2.cardsValue());
+                                }
+                                if(cevapsu==2){
+                                    break;
+                                }
+                            }
+                           break;
+                        }
+                    //2. elde split yapılırsa kısmı
+                    }else if(splitMax!=true) {
+                    System.out.println("3. eliniz: "+playerSideDeck2.toString()+"\n");
+                    System.out.println("Hit: 1 or Stay: 2");
+                int cevap= userIn.nextInt();
+                if(cevap==1){
+                    playerSideDeck2.draw(playingDeck);
+                    if(playerSideDeck2.cardsValue()>21){
+                        if(splitMax==false){
+                        System.out.println("Busted, 2. elin kaybetti");
+                        }
+                        else{
+                            System.out.println("Busted 3. elin kaybetti");
+                        }
+                        playerMoney -= playerBet/2;
                         
                         break;
                     }
-                    
+                    System.out.println("Sunu cektiniz: "+ playerSideDeck2.getCard(playerSideDeck2.deckSize()-1).toString()+"\n");
+                    System.out.println("Toplamı: "+ playerSideDeck2.cardsValue());
                 }
-            
+                if(cevap==2){
+                    
+                    break;
+                }
+                    }
+                    
+                    
+                
+            }
                 break;
             }
             if(response == 4){
@@ -162,11 +324,12 @@ public static void main(String[] args){
         }
         //Dealer 2. kartı aciyor
         System.out.println("Dealerin eli"+dealerDeck.toString());
-       
+        
         while((dealerDeck.cardsValue()<17)&& endRound==false){
             dealerDeck.draw(playingDeck);
             System.out.println("Dealer:"+ dealerDeck.getCard(dealerDeck.deckSize()-1).toString()+"'i cekti");
         }
+        
         if((dealerDeck.cardsValue() > playerDeck.cardsValue())&&split==false&&dealerDeck.cardsValue()<=21){
             System.out.println("Dealer KAZANDI");
             playerMoney -= playerBet;
@@ -174,10 +337,15 @@ public static void main(String[] args){
         }
         System.out.println("Dealerin eli:"+dealerDeck.cardsValue());
         if((dealerDeck.cardsValue()>21)&& endRound==false){
-            if(split==true){
+            if(split==true&&splitMax==false){
                 if(playerSideDeck1.cardsValue()<=21){
                     System.out.println("1. el kazandi \n");
                     playerMoney += playerBet/2;
+                }
+                if(playerSideDeck1.cardsValue()>21){
+                    System.out.println("1.el kaybetti");
+                    playerMoney -= playerBet/2;
+                    
                 }
                 if(playerSideDeck2.cardsValue()<=21){
                     System.out.println("2. el kazandi ");
@@ -189,13 +357,69 @@ public static void main(String[] args){
                     playerMoney -= playerBet/2;
                     endRound=true;
                 }
-                if(playerSideDeck1.cardsValue()>21){
-                    System.out.println("1.el kaybetti");
+
+            }
+            else if(splitMax==true&&birinciSplit==true){
+                if(playerSideDecks1Side1.cardsValue()<=21){
+                    System.out.println("1. el kazandi \n");
+                    playerMoney += playerBet/2;
+                }
+                if(playerSideDeck2.cardsValue()<=21){
+                    System.out.println("3. el kazandi ");
+                    playerMoney += playerBet/2;
+                    endRound=true;
+                }
+                if(playerSideDeck2.cardsValue()>21){
+                    System.out.println("3. el kaybetti");
                     playerMoney -= playerBet/2;
                     endRound=true;
                 }
+                if(playerSideDecks1Side1.cardsValue()>21){
+                    System.out.println("1.el kaybetti");
+                    playerMoney -= playerBet/2;
+                    
+                }
+                if(playerSideDecks1Side2.cardsValue()>21){
+                    System.out.println("2.el kaybetti");
+                    playerMoney -= playerBet/2;
+                    
+                }
+                if(playerSideDecks1Side1.cardsValue()<=21){
+                    System.out.println("2. el kazandi \n");
+                    playerMoney += playerBet/2;
+                }
             }
-            else if(split==false){
+            else if(splitMax==true&&ikinciSplit==true){
+                if(playerSideDeck1.cardsValue()<=21){
+                    System.out.println("1. el kazandi \n");
+                    playerMoney += playerBet/2;
+                }
+                if(playerSideDecks2Side2.cardsValue()<=21){
+                    System.out.println("3. el kazandi ");
+                    playerMoney += playerBet/2;
+                    endRound=true;
+                }
+                if(playerSideDecks2Side2.cardsValue()>21){
+                    System.out.println("3. el kaybetti");
+                    playerMoney -= playerBet/2;
+                    endRound=true;
+                }
+                if(playerSideDeck1.cardsValue()>21){
+                    System.out.println("1.el kaybetti");
+                    playerMoney -= playerBet/2;
+                    
+                }
+                if(playerSideDecks2Side1.cardsValue()>21){
+                    System.out.println("2.el kaybetti");
+                    playerMoney -= playerBet/2;
+                    
+                }
+                if(playerSideDecks2Side1.cardsValue()<=21){
+                    System.out.println("2. el kazandi \n");
+                    playerMoney += playerBet/2;
+                }
+            }
+            else if(split==false&&splitMax==false){
             System.out.println("dealer busted, kazandın");
             
             playerMoney +=playerBet;
@@ -214,11 +438,10 @@ public static void main(String[] args){
         }
         
         
-        if((playerSideDeck1.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&playerSideDeck1.cardsValue()<=21&&split==true){
+        if((playerSideDeck1.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&playerSideDeck1.cardsValue()<=21&&split==true&&splitMax==false){
             System.out.println("Birinci elin push");
             if((playerSideDeck2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&playerSideDeck2.cardsValue()<=21){
                 System.out.println("ikinci elin push");
-                
                 endRound=true;
             }
             if((playerSideDeck2.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&playerSideDeck2.cardsValue()<=21){
@@ -236,9 +459,8 @@ public static void main(String[] args){
                 
                 endRound=true;
             }
-
         }
-        if((playerSideDeck1.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&playerSideDeck1.cardsValue()<=21&&dealerDeck.cardsValue()<=21&&split==true){
+        if((playerSideDeck1.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&playerSideDeck1.cardsValue()<=21&&dealerDeck.cardsValue()<=21&&split==true&&splitMax==false){
             System.out.println("birinci elin kaybetti");
             playerMoney -= playerBet/2;
             if((playerSideDeck2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&playerSideDeck2.cardsValue()<=21&&dealerDeck.cardsValue()<=21){
@@ -261,7 +483,7 @@ public static void main(String[] args){
                 endRound=true;
             }
         }
-        if((playerSideDeck1.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&playerSideDeck1.cardsValue()<=21&&dealerDeck.cardsValue()<=21&&split==true){
+        if((playerSideDeck1.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&playerSideDeck1.cardsValue()<=21&&dealerDeck.cardsValue()<=21&&split==true&&splitMax==false){
             System.out.println("birinci el kazandi");
             playerMoney += playerBet/2;
             if((playerSideDeck2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&playerSideDeck2.cardsValue()<=21&&dealerDeck.cardsValue()<=21){
@@ -285,7 +507,7 @@ public static void main(String[] args){
             }
 
         }
-        if((playerSideDeck1.cardsValue()>21)&&endRound==false&&split==true){
+        if((playerSideDeck1.cardsValue()>21)&&endRound==false&&split==true&&splitMax==false){
             System.out.println("birinci el busted");
             playerMoney -= playerBet/2;
             if((playerSideDeck2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&playerSideDeck2.cardsValue()<=21&&dealerDeck.cardsValue()<=21){
@@ -297,7 +519,7 @@ public static void main(String[] args){
                 playerMoney -= playerBet/2;
                 endRound= true;
             }
-            if((playerSideDeck2.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&playerSideDeck2.cardsValue()<=21&&dealerDeck.cardsValue()<=21){
+            if((playerSideDeck2.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDeck2.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
                 System.out.println("ikinci el kazandi");
                 playerMoney += playerBet/2;
                 endRound=true;
@@ -309,14 +531,204 @@ public static void main(String[] args){
             }
         }
         
+        if((playerSideDecks1Side1.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDecks1Side1.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)&&splitMax==true&&birinciSplit==true){
+            System.out.println("1. el kazandi");
+            playerMoney += playerBet/3;
+            if((playerSideDecks1Side2.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDecks1Side2.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el kazandi");
+                playerMoney += playerBet/3;
+            }
+            if((playerSideDecks1Side2.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el kaybetti");
+                playerMoney -= playerBet/3;
+            }
+            if((playerSideDecks1Side2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el push");
+            }
+            if((playerSideDeck2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el push");
+            }
+            if((playerSideDeck2.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDeck2.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el kazandi");
+                playerMoney += playerBet/3;
+                endRound = true;
+            }
+            
+            if((playerSideDeck2.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el kaybetti");
+                playerMoney -= playerBet/3;
+                endRound = true;
+            }
+        }
+        if((playerSideDecks1Side1.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(playerSideDecks1Side1.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)&&splitMax==true&&birinciSplit==true){
+            System.out.println("1. el push");
+            
+            if((playerSideDecks1Side2.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDecks1Side2.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el kazandi");
+                playerMoney += playerBet/3;
+            }
+            if((playerSideDecks1Side2.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el kaybetti");
+                playerMoney -= playerBet/3;
+            }
+            if((playerSideDecks1Side2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el push");
+            }
+            if((playerSideDeck2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el push");
+                endRound = true;
+            }
+            if((playerSideDeck2.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDeck2.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el kazandi");
+                playerMoney += playerBet/3;
+                endRound = true;
+            }
+            
+            if((playerSideDeck2.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el kaybetti");
+                playerMoney -= playerBet/3;
+                endRound = true;
+            }
+
+        }
+
+        if((playerSideDecks1Side1.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)&&splitMax==true&&birinciSplit==true){
+            System.out.println("1. el kaybetti");
+            playerMoney -= playerBet/3;
+            if((playerSideDecks1Side2.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDecks1Side2.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el kazandi");
+                playerMoney += playerBet/3;
+            }
+            if((playerSideDecks1Side2.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el kaybetti");
+                playerMoney -= playerBet/3;
+            }
+            if((playerSideDecks1Side2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el push");
+            }
+            if((playerSideDeck2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el push");
+                endRound = true;
+            }
+            if((playerSideDeck2.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDeck2.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el kazandi");
+                playerMoney += playerBet/3;
+                endRound = true;
+            }
+            
+            if((playerSideDeck2.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el kaybetti");
+                playerMoney -= playerBet/3;
+                endRound = true;
+            }
+
+        }
+        /////////////// 2. kısm split check
+
+        if((playerSideDeck1.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDeck1.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)&&splitMax==true&&ikinciSplit==true){
+            System.out.println("1. el kazandi");
+            playerMoney += playerBet/3;
+            if((playerSideDecks2Side1.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDecks2Side1.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el kazandi");
+                playerMoney += playerBet/3;
+            }
+            if((playerSideDecks2Side1.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el kaybetti");
+                playerMoney -= playerBet/3;
+            }
+            if((playerSideDecks2Side1.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el push");
+            }
+            if((playerSideDecks2Side2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el push");
+            }
+            if((playerSideDecks2Side2.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDecks2Side2.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el kazandi");
+                playerMoney += playerBet/3;
+                endRound = true;
+            }
+            
+            if((playerSideDecks2Side2.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el kaybetti");
+                playerMoney -= playerBet/3;
+                endRound = true;
+            }
+        }
+        if((playerSideDeck1.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(playerSideDeck1.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)&&splitMax==true&&ikinciSplit==true){
+            System.out.println("1. el push");
+            
+            if((playerSideDecks2Side1.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDecks2Side1.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el kazandi");
+                playerMoney += playerBet/3;
+            }
+            if((playerSideDecks2Side1.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el kaybetti");
+                playerMoney -= playerBet/3;
+            }
+            if((playerSideDecks2Side1.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el push");
+            }
+            if((playerSideDecks2Side2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el push");
+                endRound = true;
+            }
+            if((playerSideDecks2Side2.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDecks2Side2.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el kazandi");
+                playerMoney += playerBet/3;
+                endRound = true;
+            }
+            
+            if((playerSideDecks2Side2.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el kaybetti");
+                playerMoney -= playerBet/3;
+                endRound = true;
+            }
+
+        }
+
+        if((playerSideDeck1.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)&&splitMax==true&&ikinciSplit==true){
+            System.out.println("1. el kaybetti");
+            playerMoney -= playerBet/3;
+            if((playerSideDecks2Side1.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDecks2Side1.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el kazandi");
+                playerMoney += playerBet/3;
+            }
+            if((playerSideDecks2Side1.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el kaybetti");
+                playerMoney -= playerBet/3;
+            }
+            if((playerSideDecks2Side1.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("2. el push");
+            }
+            if((playerSideDecks2Side2.cardsValue()==dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el push");
+                endRound = true;
+            }
+            if((playerSideDecks2Side2.cardsValue()>dealerDeck.cardsValue())&&endRound==false&&(playerSideDecks2Side2.cardsValue()<=21)&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el kazandi");
+                playerMoney += playerBet/3;
+                endRound = true;
+            }
+            
+            if((playerSideDecks2Side2.cardsValue()<dealerDeck.cardsValue())&&endRound==false&&(dealerDeck.cardsValue()<=21)){
+                System.out.println("3. el kaybetti");
+                playerMoney -= playerBet/3;
+                endRound = true;
+            }
+
+        }
         
         //tüm kartlar el bitince direkt desteye tekrar geri gelir karıştırılır. oyunun aslındaki versiyondan önce tamamen kodun iyileştirilmesi gerek.
 
         playerDeck.moveAllToDeck(playingDeck);
         playerSideDeck1.moveAllToDeck(playingDeck);
         playerSideDeck2.moveAllToDeck(playingDeck);
+        playerSideDecks1Side1.moveAllToDeck(playingDeck);
+        playerSideDecks1Side2.moveAllToDeck(playingDeck);
         playerTempDeck.moveAllToDeck(playingDeck);
         dealerDeck.moveAllToDeck(playingDeck);
+        playerSideDecks2Side2.moveAllToDeck(playingDeck);
+        playerSideDecks2Side1.moveAllToDeck(playingDeck);
         System.out.println("Elin sonu");
      }
      System.out.println("bitik oc öldün:DD"); // para biterse kafaya kursun
