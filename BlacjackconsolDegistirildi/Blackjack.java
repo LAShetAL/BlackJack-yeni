@@ -134,12 +134,17 @@ public static void main(String[] args){
                 doubleDwn=true;
                 playerDeck.draw(playingDeck);
                 System.out.println("Sunu cektiniz:"+ playerDeck.getCard(playerDeck.deckSize()-1).toString());
-                if((playerDeck.cardsValue() >21)){
+                System.out.println("Elinizin toplamı: "+ playerDeck.cardsValue());
+                if(playerDeck.cardsValue()==21){
+                    break;
+                }
+                if(playerDeck.cardsValue() >21){
                     System.out.println("Busted! Eliniz"+ playerDeck.cardsValue());
                     playerMoney -= playerBet;      
                     endRound = true;
                     break;    
-                }   
+                }
+                  
             }
             //stay derse game looptan cıkıyor
             if(response==2){
@@ -179,6 +184,9 @@ public static void main(String[] args){
                         
                         System.out.println("Sunu cektiniz: "+ playerSideDeck1.getCard(playerSideDeck1.deckSize()-1).toString()+"\n");
                         System.out.println("Toplamı: "+ playerSideDeck1.cardsValue());
+                        if(playerSideDeck1.cardsValue()==21){
+                            break;
+                        }
                     }
                     if(cevab==2){
                         break;
@@ -205,8 +213,12 @@ public static void main(String[] args){
                                     
                                     break;
                             }
+                            
                                 System.out.println("Sunu cektiniz: "+ playerSideDecks1Side1.getCard(playerSideDecks1Side1.deckSize()-1).toString()+"\n");
                                 System.out.println("Toplamı: "+ playerSideDecks1Side1.cardsValue());
+                                if(playerSideDecks1Side1.cardsValue()==21){
+                                    break;
+                                }
                             }
                             if(cevaps==2){
                                 break;
@@ -225,8 +237,12 @@ public static void main(String[] args){
                                     
                                     break;
                             }
+                            
                                 System.out.println("Sunu cektiniz: "+ playerSideDecks1Side2.getCard(playerSideDecks1Side2.deckSize()-1).toString()+"\n");
                                 System.out.println("Toplamı: "+ playerSideDecks1Side2.cardsValue());
+                                if(playerSideDecks1Side2.cardsValue()==21){
+                                    break;
+                                }
                             }
                             if(cevapsu==2){
                                 break;
@@ -254,8 +270,12 @@ public static void main(String[] args){
                                 
                                 break;
                             }
+                            
                             System.out.println("Sunu cektiniz: "+ playerSideDeck2.getCard(playerSideDeck2.deckSize()-1).toString()+"\n");
                             System.out.println("Toplamı: "+ playerSideDeck2.cardsValue());
+                            if(playerSideDeck2.cardsValue()==21){
+                                break;
+                            }
                         }
                         if(cevap==2){
                             
@@ -280,8 +300,12 @@ public static void main(String[] args){
                                 
                                 break;
                             }
+                            
                             System.out.println("Sunu cektiniz: "+ playerSideDeck2.getCard(playerSideDeck2.deckSize()-1).toString()+"\n");
                             System.out.println("Toplamı: "+ playerSideDeck2.cardsValue());
+                            if(playerSideDeck2.cardsValue()==21){
+                                break;
+                            }
                         }
                         if(cev==2){
                             break;
@@ -307,8 +331,12 @@ public static void main(String[] args){
                                         System.out.println("Busted, 2. elin kaybetti");
                                         break;
                                 }
+                                
                                     System.out.println("Sunu cektiniz: "+ playerSideDecks2Side1.getCard(playerSideDecks2Side1.deckSize()-1).toString()+"\n");
                                     System.out.println("Toplamı: "+ playerSideDecks2Side1.cardsValue());
+                                    if(playerSideDecks2Side1.cardsValue()==21){
+                                        break;
+                                    }
                                 }
                                 if(cevaps==2){
                                     break;
@@ -327,8 +355,12 @@ public static void main(String[] args){
                                         
                                         break;
                                 }
+                                
                                     System.out.println("Sunu cektiniz: "+ playerSideDecks2Side2.getCard(playerSideDecks2Side2.deckSize()-1).toString()+"\n");
                                     System.out.println("Toplamı: "+ playerSideDecks2Side2.cardsValue());
+                                    if(playerSideDecks2Side1.cardsValue()==21){
+                                        break;
+                                    }
                                 }
                                 if(cevapsu==2){
                                     break;
@@ -356,6 +388,10 @@ public static void main(String[] args){
                     }
                     System.out.println("Sunu cektiniz: "+ playerSideDeck2.getCard(playerSideDeck2.deckSize()-1).toString()+"\n");
                     System.out.println("Toplamı: "+ playerSideDeck2.cardsValue());
+                    if(playerSideDeck2.cardsValue()==21){
+                        break;
+                    }
+                    
                 }
                 if(cevap==2){
                     
