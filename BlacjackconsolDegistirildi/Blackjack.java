@@ -27,7 +27,8 @@ public static void main(String[] args){
      Scanner userIn = new Scanner(System.in);
 
      //game loop
-
+     
+     
      while(playerMoney > 0){
         //bet
         System.out.println("Toplam paraniz "+ playerMoney+ " toplam bahsinizi giriniz");
@@ -41,7 +42,8 @@ public static void main(String[] args){
         boolean splitMax= false;
         boolean birinciSplit=false;
         boolean ikinciSplit=false;
-
+        boolean doubleDwn=false;
+        boolean insAsked=false;
         playerDeck.draw(playingDeck);
         dealerDeck.draw(playingDeck);
         
@@ -51,7 +53,64 @@ public static void main(String[] args){
         boolean split=false;
         
         while(true){
-            if(split==false){
+            if(split==false&&(dealerDeck.getCard(0).getValue()!= 11||playerDeck.cardsValue()!=21)){
+            System.out.println("Eliniz:");
+            System.out.println(playerDeck.toString());
+            System.out.println("Elinizin toplami:"+ playerDeck.cardsValue());
+            System.out.println("Dealerin eli: "+ dealerDeck.getCard(0).toString()+ " ve [Gizli]");
+            System.out.println("Hit:1 , Stay:2 , Split:3, Double-Down:4");
+            } if(split==false&&insAsked==false&&(dealerDeck.getCard(0).getValue()==11||playerDeck.cardsValue()==21||dealerDeck.cardsValue()==21)){
+                insAsked=true;
+                
+                if(playerDeck.cardsValue()==21&&dealerDeck.cardsValue()!=21&&endRound==false&&split==false){
+                    System.out.println("Blackjack! Kazandin");
+                    playerMoney += 3*playerBet/2;
+                    endRound=true;
+                    break;
+                }
+                
+                // INSURANCE
+                if(dealerDeck.getCard(0).getValue()!= 11&&dealerDeck.cardsValue()==21){
+                    System.out.println("Dealer Has blacjack!");
+                    playerMoney -= playerBet;
+                    endRound= true;
+                    break;
+                }
+                if(dealerDeck.getCard(0).getValue()== 11){
+                    System.out.println("Insurance? Y/N");
+                    String ins= userIn.next();
+                    double insBet= playerBet/2;
+                    if(ins.equals("y")){
+                        System.out.println("Insurance beti verildi");
+                        playerMoney-=insBet;
+                    }else if(ins.equals("n")){
+                        System.out.println("Insurance verilmedi");
+                    
+                    }
+                    
+                    if(dealerDeck.cardsValue()==21){
+                        System.out.println("Dealer Has BlackJack");
+                        if(ins.equals("y")){
+                        System.out.println("Paran Sigortalandi");
+                        playerMoney+=insBet;
+                        playerMoney+=playerBet;
+                        endRound=true;
+                        break;
+                        }
+                        if(ins.equals("n")){
+                            System.out.println("Paran sigortalanmadi");
+                            playerMoney-=playerBet;
+                            endRound=true;
+                            break;
+                        }
+                    }else if(dealerDeck.cardsValue()!=21&&ins.equals("n")){
+                        System.out.println("Dealer'da 10 yok");
+                        
+                         
+                    }
+                
+               
+            }
             System.out.println("Eliniz:");
             System.out.println(playerDeck.toString());
             System.out.println("Elinizin toplami:"+ playerDeck.cardsValue());
@@ -72,6 +131,7 @@ public static void main(String[] args){
             int response = userIn.nextInt();
             //hit derse
             if(response==1){
+                doubleDwn=true;
                 playerDeck.draw(playingDeck);
                 System.out.println("Sunu cektiniz:"+ playerDeck.getCard(playerDeck.deckSize()-1).toString());
                 if((playerDeck.cardsValue() >21)){
@@ -113,9 +173,10 @@ public static void main(String[] args){
                         playerSideDeck1.draw(playingDeck);
                         if(playerSideDeck1.cardsValue()>21){
                             System.out.println("Busted, 1. elin kaybetti");
-                            playerMoney -= playerBet/2;
+                            
                             break;
                         }
+                        
                         System.out.println("Sunu cektiniz: "+ playerSideDeck1.getCard(playerSideDeck1.deckSize()-1).toString()+"\n");
                         System.out.println("Toplamı: "+ playerSideDeck1.cardsValue());
                     }
@@ -307,7 +368,8 @@ public static void main(String[] args){
             }
                 break;
             }
-            if(response == 4){
+            if(response == 4&&doubleDwn==false){
+                doubleDwn=true;
                 playerBet = 2*playerBet;
                 playerDeck.draw(playingDeck);
                 System.out.println("Sunu cektiniz: "+ playerDeck.getCard(playerDeck.deckSize()-1).toString());
@@ -323,6 +385,7 @@ public static void main(String[] args){
             }
         }
         //Dealer 2. kartı aciyor
+        
         System.out.println("Dealerin eli"+dealerDeck.toString());
         
         while((dealerDeck.cardsValue()<17)&& endRound==false){
@@ -736,6 +799,7 @@ public static void main(String[] args){
 
 
 }
+
 }
 
 
